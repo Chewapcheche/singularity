@@ -4,6 +4,7 @@ import { GameBoard } from './components/GameBoard';
 import { StatusPanel } from './components/StatusPanel';
 import { VictoryOverlay } from './components/VictoryOverlay';
 import { useGameStore } from './store/useGameStore';
+import { getActionPointsForTurn } from './types';
 
 function App() {
   const {
@@ -19,6 +20,7 @@ function App() {
     selectCell,
     resetGame,
   } = useGameStore();
+  const maxActionPoints = getActionPointsForTurn(turn);
 
   return (
     <main className="min-h-screen overflow-hidden bg-slate-950 text-slate-100">
@@ -56,6 +58,7 @@ function App() {
             <StatusPanel
               currentPlayer={currentPlayer}
               actionPoints={actionPoints}
+              maxActionPoints={maxActionPoints}
               turn={turn}
               victoryCondition={victoryCondition}
               onRestart={resetGame}

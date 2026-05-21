@@ -1,5 +1,9 @@
 export const BOARD_SIZE = 6;
-export const TURN_ACTION_POINTS = 2;
+export const OPENING_TURN_ACTION_POINTS = 1;
+export const STANDARD_TURN_ACTION_POINTS = 2;
+
+export const getActionPointsForTurn = (turn: number): number =>
+  turn === 1 ? OPENING_TURN_ACTION_POINTS : STANDARD_TURN_ACTION_POINTS;
 
 export type Player = 'X' | 'O';
 

@@ -1,6 +1,6 @@
 import {
   BOARD_SIZE,
-  TURN_ACTION_POINTS,
+  getActionPointsForTurn,
   type Anomaly,
   type AnomalyType,
   type Board,
@@ -164,7 +164,7 @@ export const createInitialGameState = (): GameState => {
   return {
     board: seedAnomalies(createEmptyBoard()),
     currentPlayer: 'X',
-    actionPoints: TURN_ACTION_POINTS,
+    actionPoints: getActionPointsForTurn(1),
     turn: 1,
     completedTurns: 0,
     victoryCondition,
@@ -177,6 +177,7 @@ export const createInitialGameState = (): GameState => {
         'system',
       ),
       createGameEvent(1, 'Initial anomaly lattice has materialized across the grid.', 'anomaly'),
+      createGameEvent(1, 'Opening initiative: Player X receives 1 AP, then all turns grant 2 AP.', 'system'),
     ],
   };
 };
@@ -284,6 +285,7 @@ export const endTurn = (state: GameState): GameState => {
   if (state.winner) return state;
 
   const completedTurns = state.completedTurns + 1;
+  const nextTurn = state.turn + 1;
   const nextPlayer = getOpponent(state.currentPlayer);
   let nextBoard = state.board;
   let events = addEvent(
@@ -298,7 +300,7 @@ export const endTurn = (state: GameState): GameState => {
       events = addEvent(
         events,
         createGameEvent(
-          state.turn + 1,
+          nextTurn,
           `${anomalyDescriptions[spawned.anomaly.type].label} appeared at sector ${spawned.cell.row + 1}.${spawned.cell.col + 1}.`,
           'anomaly',
         ),
@@ -310,8 +312,8 @@ export const endTurn = (state: GameState): GameState => {
     ...state,
     board: nextBoard,
     currentPlayer: nextPlayer,
-    actionPoints: TURN_ACTION_POINTS,
-    turn: state.turn + 1,
+    actionPoints: getActionPointsForTurn(nextTurn),
+    turn: nextTurn,
     completedTurns,
     selectedCellId: null,
     events,

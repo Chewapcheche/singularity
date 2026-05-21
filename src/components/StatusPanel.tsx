@@ -1,15 +1,23 @@
 import { Activity, BadgeInfo, Crosshair, RefreshCw, Shield } from 'lucide-react';
-import { TURN_ACTION_POINTS, type Player, type VictoryCondition } from '../types';
+import type { Player, VictoryCondition } from '../types';
 
 interface StatusPanelProps {
   currentPlayer: Player;
   actionPoints: number;
+  maxActionPoints: number;
   turn: number;
   victoryCondition: VictoryCondition;
   onRestart: () => void;
 }
 
-export function StatusPanel({ currentPlayer, actionPoints, turn, victoryCondition, onRestart }: StatusPanelProps) {
+export function StatusPanel({
+  currentPlayer,
+  actionPoints,
+  maxActionPoints,
+  turn,
+  victoryCondition,
+  onRestart,
+}: StatusPanelProps) {
   return (
     <aside className="space-y-4">
       <div className="rounded-3xl border border-cyan-300/20 bg-slate-950/65 p-5 shadow-neon backdrop-blur-xl">
@@ -40,11 +48,11 @@ export function StatusPanel({ currentPlayer, actionPoints, turn, victoryConditio
           <div className="mb-3 flex items-center justify-between text-sm text-slate-300">
             <span>Action Points</span>
             <span>
-              {actionPoints}/{TURN_ACTION_POINTS}
+              {actionPoints}/{maxActionPoints}
             </span>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {Array.from({ length: TURN_ACTION_POINTS }, (_, index) => (
+            {Array.from({ length: maxActionPoints }, (_, index) => (
               <span
                 key={index}
                 className={[
@@ -76,6 +84,7 @@ export function StatusPanel({ currentPlayer, actionPoints, turn, victoryConditio
           <BadgeInfo size={16} /> Command Rules
         </div>
         <ul className="space-y-2 text-sm leading-6 text-slate-400">
+          <li className="flex gap-2"><Shield size={16} className="mt-1 text-cyan-200" /> Turn 1 grants X 1 AP; every later turn grants 2 AP.</li>
           <li className="flex gap-2"><Shield size={16} className="mt-1 text-cyan-200" /> Place a marker: 1 AP.</li>
           <li className="flex gap-2"><Shield size={16} className="mt-1 text-fuchsia-200" /> Select your marker, then move to a glowing adjacent cell: 1 AP.</li>
           <li className="flex gap-2"><Shield size={16} className="mt-1 text-emerald-200" /> Click your marker on an anomaly to activate it: 1 AP.</li>
