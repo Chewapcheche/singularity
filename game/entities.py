@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import List, Optional, TYPE_CHECKING
 
-from ursina import color, destroy, Entity, Text, Vec3
+from ursina import color, destroy, Entity, lerp, Text, Vec3
 
 from game.config import (
     CREEP_TYPES,
@@ -173,7 +173,8 @@ class Creep(Entity):
             return False
         if self._flash > 0:
             self._flash -= dt
-            self.color = _rgb(self.creep_type.color).lerp(color.white, 0.35)
+            base = _rgb(self.creep_type.color)
+            self.color = lerp(base, color.white, 0.35)
         else:
             self.color = _rgb(self.creep_type.color)
 

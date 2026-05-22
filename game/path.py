@@ -44,7 +44,8 @@ def position_on_path(points: List[Vec3], seg_lens: List[float], dist: float) -> 
     for i, seg in enumerate(seg_lens):
         if traveled + seg >= dist:
             t = (dist - traveled) / seg if seg > 0 else 0
-            return points[i].lerp(points[i + 1], t)
+            a, b = points[i], points[i + 1]
+            return a + (b - a) * t
         traveled += seg
     return points[-1]
 
