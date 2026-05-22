@@ -7,5 +7,6 @@ dist/
 build/
 *.zip
 Desktop/
-*.spec
+# PyInstaller temp specs only (keep PokemonDotaTD.spec)
+build/*.spec
 .DS_Store
