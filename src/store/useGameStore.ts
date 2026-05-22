@@ -3,18 +3,14 @@ import { activateAnomaly, createInitialGameState, placePiece } from '../engine/g
 import type { GameState } from '../types';
 
 interface GameStore extends GameState {
-  validMoveIds: string[];
   selectCell: (cellId: string) => void;
   resetGame: () => void;
 }
 
-const withValidMoves = (state: GameState): GameState & { validMoveIds: string[] } => ({
-  ...state,
-  validMoveIds: [],
-});
+const withDerivedState = (state: GameState): GameState => state;
 
 export const useGameStore = create<GameStore>((set, get) => ({
-  ...withValidMoves(createInitialGameState()),
+  ...withDerivedState(createInitialGameState()),
   selectCell: (cellId) => {
     const state = get();
     if (state.winner || state.draw) return;
@@ -31,10 +27,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
 
     if (nextState) {
-      set(withValidMoves(nextState));
+      set(withDerivedState(nextState));
     } else {
-      set(withValidMoves({ ...state, selectedCellId: null }));
+      set(withDerivedState({ ...state, selectedCellId: null }));
     }
   },
-  resetGame: () => set(withValidMoves(createInitialGameState())),
+  resetGame: () => set(withDerivedState(createInitialGameState())),
 }));

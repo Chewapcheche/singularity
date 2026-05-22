@@ -1,6 +1,6 @@
 import { Copy, Orbit, Shield, X, Zap } from 'lucide-react';
 import { anomalyDescriptions } from '../engine/gameEngine';
-import { DRAW_MOVE_LIMIT } from '../types';
+import { DRAW_TURN_LIMIT } from '../types';
 
 interface HintsModalProps {
   isOpen: boolean;
@@ -35,9 +35,9 @@ export function HintsModal({ isOpen, onClose }: HintsModalProps) {
               <h3 className="mb-3 font-display text-lg font-bold text-cyan-100">Turn Rules</h3>
               <ul className="space-y-2 text-sm leading-5 text-slate-300">
                 <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-cyan-200" /> X starts with 1 action. Every later turn gives 2 actions.</li>
-                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-fuchsia-200" /> Pieces cannot be moved or dragged after placement.</li>
-                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-emerald-200" /> Adjacent placement is allowed except Player 0 cannot place next to another 0 on their second move.</li>
-                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-amber-200" /> The board starts 4x4, expands after moves 4 and 7, and draws after move {DRAW_MOVE_LIMIT}.</li>
+                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-fuchsia-200" /> Pieces stay fixed after placement and cannot be dragged.</li>
+                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-emerald-200" /> Adjacent placement is allowed except the player on Turn 2 cannot place next to their own piece.</li>
+                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-amber-200" /> The board starts 4x4, expands on Turns 4 and 7, and draws on Turn {DRAW_TURN_LIMIT}.</li>
               </ul>
             </section>
 

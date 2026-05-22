@@ -1,9 +1,9 @@
 import {
   BOARD_SIZE,
-  DRAW_MOVE_LIMIT,
+  DRAW_TURN_LIMIT,
   INITIAL_BOARD_SIZE,
   getActionPointsForTurn,
-  getBoardSizeForMoveCount,
+  getBoardSizeForTurn,
   type Anomaly,
   type AnomalyType,
   type Board,
@@ -115,8 +115,6 @@ export const getAdjacentCoordinates = (cell: Coordinate, includeDiagonals = true
     .filter(isInsideBoard);
 };
 
-export const getValidMoves = (): string[] => [];
-
 export const createGameEvent = (turn: number, message: string, tone: GameEvent['tone'] = 'system'): GameEvent => ({
   id: randomId('event'),
   turn,
@@ -171,7 +169,6 @@ export const createInitialGameState = (): GameState => {
   return {
     board: seedAnomalies(createEmptyBoard(), INITIAL_BOARD_SIZE),
     activeBoardSize: INITIAL_BOARD_SIZE,
-    moveCount: 0,
     currentPlayer: 'X',
     actionPoints: getActionPointsForTurn(1),
     turn: 1,
@@ -186,7 +183,7 @@ export const createInitialGameState = (): GameState => {
         `Victory protocol online: ${victoryCondition.title}. ${victoryCondition.description}`,
         'system',
       ),
-      createGameEvent(1, 'Initial 4x4 fracture grid is online. It expands after moves 4 and 7.', 'system'),
+      createGameEvent(1, 'Initial 4x4 fracture grid is online. It expands on Turns 4 and 7.', 'system'),
       createGameEvent(1, 'Opening initiative: Player X receives 1 AP, then all turns grant 2 AP.', 'system'),
     ],
   };
@@ -274,51 +271,25 @@ const hasAdjacentOwnPiece = (board: Board, cell: Cell, player: Player, activeBoa
     .some(({ row, col }) => board[row][col].piece === player);
 
 const createDrawState = (): DrawState => ({
-  message: `Move ${DRAW_MOVE_LIMIT} reached before either side stabilized the fracture.`,
+  message: `Turn ${DRAW_TURN_LIMIT} reached before either side stabilized the fracture.`,
 });
 
 const resolveAction = (state: GameState, board: Board, event: GameEvent): GameState => {
-  const nextMoveCount = state.moveCount + 1;
   const nextActionPoints = state.actionPoints - 1;
-  const nextActiveBoardSize = getBoardSizeForMoveCount(nextMoveCount);
-  let events = addEvent(state.events, event);
-
-  if (nextActiveBoardSize > state.activeBoardSize) {
-    events = addEvent(
-      events,
-      createGameEvent(
-        state.turn,
-        `The fracture expands to a ${nextActiveBoardSize}x${nextActiveBoardSize} board after move ${nextMoveCount}.`,
-        'system',
-      ),
-    );
-  }
-
-  const winner = checkVictory(board, state.currentPlayer, state.victoryCondition, nextActiveBoardSize);
-  const draw = winner ? null : nextMoveCount >= DRAW_MOVE_LIMIT ? createDrawState() : null;
+  const winner = checkVictory(board, state.currentPlayer, state.victoryCondition, state.activeBoardSize);
   let nextState: GameState = {
     ...state,
     board,
-    activeBoardSize: nextActiveBoardSize,
-    moveCount: nextMoveCount,
     actionPoints: nextActionPoints,
     selectedCellId: null,
     winner,
-    draw,
-    events,
+    events: addEvent(state.events, event),
   };
 
   if (winner) {
     return {
       ...nextState,
       events: addEvent(nextState.events, createGameEvent(state.turn, winner.message, 'victory')),
-    };
-  }
-
-  if (draw) {
-    return {
-      ...nextState,
-      events: addEvent(nextState.events, createGameEvent(state.turn, draw.message, 'victory')),
     };
   }
 
@@ -335,14 +306,28 @@ export const endTurn = (state: GameState): GameState => {
   const completedTurns = state.completedTurns + 1;
   const nextTurn = state.turn + 1;
   const nextPlayer = getOpponent(state.currentPlayer);
+  const nextActiveBoardSize = getBoardSizeForTurn(nextTurn);
   let nextBoard = state.board;
   let events = addEvent(
     state.events,
     createGameEvent(state.turn, `${state.currentPlayer} expended all AP. ${nextPlayer} enters the breach.`, 'system'),
   );
 
-  if (completedTurns % 2 === 0) {
-    const spawned = spawnAnomaly(nextBoard, state.activeBoardSize);
+  if (nextActiveBoardSize > state.activeBoardSize) {
+    events = addEvent(
+      events,
+      createGameEvent(
+        nextTurn,
+        `The fracture expands to a ${nextActiveBoardSize}x${nextActiveBoardSize} board on Turn ${nextTurn}.`,
+        'system',
+      ),
+    );
+  }
+
+  const draw = nextTurn >= DRAW_TURN_LIMIT ? createDrawState() : null;
+
+  if (!draw && completedTurns % 2 === 0) {
+    const spawned = spawnAnomaly(nextBoard, nextActiveBoardSize);
     nextBoard = spawned.board;
     if (spawned.anomaly && spawned.cell) {
       events = addEvent(
@@ -356,16 +341,27 @@ export const endTurn = (state: GameState): GameState => {
     }
   }
 
-  return {
+  const nextState: GameState = {
     ...state,
     board: nextBoard,
+    activeBoardSize: nextActiveBoardSize,
     currentPlayer: nextPlayer,
     actionPoints: getActionPointsForTurn(nextTurn),
     turn: nextTurn,
     completedTurns,
     selectedCellId: null,
+    draw,
     events,
   };
+
+  if (draw) {
+    return {
+      ...nextState,
+      events: addEvent(nextState.events, createGameEvent(nextTurn, draw.message, 'victory')),
+    };
+  }
+
+  return nextState;
 };
 
 export const placePiece = (state: GameState, cellId: string): GameState => {
@@ -373,10 +369,10 @@ export const placePiece = (state: GameState, cellId: string): GameState => {
   const cell = getCell(state.board, cellId);
   if (!cell || cell.piece || !isInsideActiveBoard(cell, state.activeBoardSize)) return state;
 
-  const isPlayerZeroSecondMove = state.currentPlayer === 'O' && state.turn === 2 && state.actionPoints === 1;
+  const isPlayerZeroSecondAction = state.currentPlayer === 'O' && state.turn === 2 && state.actionPoints === 1;
   const isAdjacentToOwnPiece = hasAdjacentOwnPiece(state.board, cell, state.currentPlayer, state.activeBoardSize);
 
-  if (isPlayerZeroSecondMove && isAdjacentToOwnPiece) {
+  if (isPlayerZeroSecondAction && isAdjacentToOwnPiece) {
     return {
       ...state,
       selectedCellId: null,
@@ -384,7 +380,7 @@ export const placePiece = (state: GameState, cellId: string): GameState => {
         state.events,
         createGameEvent(
           state.turn,
-          'Player 0 cannot place next to another 0 on move number 2.',
+          'Player 0 cannot place next to another 0 on Turn 2.',
           'system',
         ),
       ),

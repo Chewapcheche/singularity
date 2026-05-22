@@ -12,9 +12,7 @@ function App() {
   const {
     board,
     activeBoardSize,
-    moveCount,
     selectedCellId,
-    validMoveIds,
     currentPlayer,
     actionPoints,
     turn,
@@ -41,7 +39,7 @@ function App() {
             </h1>
           </div>
           <div className="rounded-2xl border border-fuchsia-300/25 bg-fuchsia-300/10 px-3 py-2 text-sm text-fuchsia-100 shadow-violet">
-            4x4 to 6x6 fracture grid. Draw at move 13.
+            4x4 to 6x6 fracture grid. Draw on Turn 17.
           </div>
         </header>
 
@@ -51,7 +49,6 @@ function App() {
               board={board}
               activeBoardSize={activeBoardSize}
               selectedCellId={selectedCellId}
-              validMoveIds={validMoveIds}
               currentPlayer={currentPlayer}
               onSelectCell={selectCell}
             />
@@ -62,7 +59,6 @@ function App() {
               actionPoints={actionPoints}
               maxActionPoints={maxActionPoints}
               turn={turn}
-              moveCount={moveCount}
               activeBoardSize={activeBoardSize}
               victoryCondition={victoryCondition}
               onOpenHints={() => setIsHintsOpen(true)}

@@ -5,7 +5,6 @@ interface GameBoardProps {
   board: Board;
   activeBoardSize: number;
   selectedCellId: string | null;
-  validMoveIds: string[];
   currentPlayer: Player;
   onSelectCell: (cellId: string) => void;
 }
@@ -14,7 +13,6 @@ export function GameBoard({
   board,
   activeBoardSize,
   selectedCellId,
-  validMoveIds,
   currentPlayer,
   onSelectCell,
 }: GameBoardProps) {
@@ -38,7 +36,6 @@ export function GameBoard({
             cell={cell}
             currentPlayer={currentPlayer}
             isSelected={selectedCellId === cell.id}
-            isValidMove={validMoveIds.includes(cell.id)}
             onSelect={onSelectCell}
           />
         ))}

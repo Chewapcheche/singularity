@@ -5,7 +5,6 @@ import type { AnomalyType, Cell, Player } from '../types';
 interface BoardCellProps {
   cell: Cell;
   isSelected: boolean;
-  isValidMove: boolean;
   currentPlayer: Player;
   onSelect: (cellId: string) => void;
 }
@@ -22,7 +21,7 @@ const anomalyClasses: Record<AnomalyType, string> = {
   clone: 'from-emerald-400/25 via-teal-400/15 to-lime-400/20 border-emerald-300/70 text-emerald-100 shadow-[0_0_28px_rgba(16,185,129,0.28)]',
 };
 
-export function BoardCell({ cell, isSelected, isValidMove, currentPlayer, onSelect }: BoardCellProps) {
+export function BoardCell({ cell, isSelected, currentPlayer, onSelect }: BoardCellProps) {
   const Icon = cell.anomaly ? anomalyIcon[cell.anomaly.type] : Binary;
   const canActivate = cell.piece === currentPlayer && cell.anomaly;
   const tooltip = cell.anomaly ? anomalyDescriptions[cell.anomaly.type] : null;
@@ -43,7 +42,6 @@ export function BoardCell({ cell, isSelected, isValidMove, currentPlayer, onSele
           ? `bg-gradient-to-br ${anomalyClasses[cell.anomaly.type]}`
           : 'border-cyan-500/20 shadow-[inset_0_0_18px_rgba(15,23,42,0.9)]',
         isSelected ? 'scale-[1.03] border-fuchsia-300 shadow-violet ring-2 ring-fuchsia-300/70' : '',
-        isValidMove ? 'border-lime-300/80 shadow-[0_0_26px_rgba(190,242,100,0.35)]' : '',
         canActivate ? 'animate-slow-pulse' : '',
       ].join(' ')}
     >
@@ -55,12 +53,6 @@ export function BoardCell({ cell, isSelected, isValidMove, currentPlayer, onSele
       {cell.anomaly && (
         <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-black/35 p-1 text-current backdrop-blur sm:right-2 sm:top-2">
           <Icon size={14} />
-        </span>
-      )}
-
-      {isValidMove && (
-        <span className="absolute inset-0 grid place-items-center">
-          <span className="h-4 w-4 rounded-full border border-lime-200 bg-lime-300/30 shadow-[0_0_18px_rgba(190,242,100,0.8)]" />
         </span>
       )}
 
@@ -77,7 +69,7 @@ export function BoardCell({ cell, isSelected, isValidMove, currentPlayer, onSele
         </span>
       )}
 
-      {!cell.piece && !isValidMove && (
+      {!cell.piece && (
         <Sparkles
           size={16}
           className="absolute bottom-2 right-2 text-cyan-200/0 transition group-hover:text-cyan-200/60"

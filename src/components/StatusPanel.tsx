@@ -1,12 +1,11 @@
 import { Activity, Crosshair, HelpCircle, RefreshCw } from 'lucide-react';
-import { DRAW_MOVE_LIMIT, type Player, type VictoryCondition } from '../types';
+import { DRAW_TURN_LIMIT, type Player, type VictoryCondition } from '../types';
 
 interface StatusPanelProps {
   currentPlayer: Player;
   actionPoints: number;
   maxActionPoints: number;
   turn: number;
-  moveCount: number;
   activeBoardSize: number;
   victoryCondition: VictoryCondition;
   onOpenHints: () => void;
@@ -18,7 +17,6 @@ export function StatusPanel({
   actionPoints,
   maxActionPoints,
   turn,
-  moveCount,
   activeBoardSize,
   victoryCondition,
   onOpenHints,
@@ -42,7 +40,7 @@ export function StatusPanel({
             <div>
               <p className="text-[0.65rem] uppercase tracking-[0.28em] text-cyan-200/70">Current Turn</p>
               <p className="font-display text-2xl font-bold text-white">Player {currentPlayer === 'O' ? '0' : currentPlayer}</p>
-              <p className="text-sm text-slate-400">Turn {turn}</p>
+              <p className="text-sm text-slate-400">Turn {turn}/{DRAW_TURN_LIMIT}</p>
             </div>
           </div>
           <Activity className="hidden text-cyan-200 sm:block" />
@@ -76,8 +74,8 @@ export function StatusPanel({
             <p className="font-display text-xl font-bold text-white">{activeBoardSize}x{activeBoardSize}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-            <p className="text-slate-400">Moves</p>
-            <p className="font-display text-xl font-bold text-white">{moveCount}/{DRAW_MOVE_LIMIT}</p>
+            <p className="text-slate-400">Draw Turn</p>
+            <p className="font-display text-xl font-bold text-white">{turn}/{DRAW_TURN_LIMIT}</p>
           </div>
         </div>
       </div>
