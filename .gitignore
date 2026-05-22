@@ -5,5 +5,7 @@ __pycache__/
 venv/
 dist/
 build/
+*.zip
+Desktop/
 *.spec
 .DS_Store

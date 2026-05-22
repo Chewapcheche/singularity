@@ -43,11 +43,25 @@ python main.py
 | Продать | Sell |
 | Выход | **ESC** / Quit / ✕ |
 
-## Сборка exe (опционально)
+## Папка на рабочем столе + EXE (Windows)
+
+**На вашем ПК** откройте папку с игрой (клон репозитория или скачанный архив) и:
+
+1. Дважды щёлкните **`package_to_desktop.bat`** — скопирует файлы в  
+   `%USERPROFILE%\Desktop\PokemonDotaTD`
+2. Дважды щёлкните **`build_windows.bat`** в той же папке (или на рабочем столе) — соберёт **`PokemonDotaTD.exe`**
+3. Запуск игры: двойной щелчок по **`PokemonDotaTD.exe`** на рабочем столе
+
+Подробно: файл **`LAUNCH.txt`** в папке игры.
+
+> EXE для Windows собирается **только на Windows** (PyInstaller). На Linux получается файл `PokemonDotaTD` без расширения `.exe`.
+
+### Linux / macOS
 
 ```bash
-pip install pyinstaller
-pyinstaller --onefile --windowed --name PokemonDotaTD main.py
+chmod +x build_linux.sh package_to_desktop.sh
+./build_linux.sh
+# Игра: ~/Desktop/PokemonDotaTD/PokemonDotaTD
 ```
 
 ## Структура
