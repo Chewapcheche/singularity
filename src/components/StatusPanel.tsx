@@ -23,7 +23,7 @@ export function StatusPanel({
   onRestart,
 }: StatusPanelProps) {
   return (
-    <aside className="grid gap-3">
+    <aside className="grid w-full content-start gap-3">
       <div className="rounded-3xl border border-cyan-300/20 bg-slate-950/70 p-4 shadow-neon backdrop-blur-xl">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">

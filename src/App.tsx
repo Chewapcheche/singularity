@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { EventLog } from './components/EventLog';
 import { GameBoard } from './components/GameBoard';
 import { HintsModal } from './components/HintsModal';
 import { StatusPanel } from './components/StatusPanel';
@@ -17,7 +16,6 @@ function App() {
     actionPoints,
     turn,
     victoryCondition,
-    events,
     winner,
     draw,
     selectCell,
@@ -43,8 +41,8 @@ function App() {
           </div>
         </header>
 
-        <div className="grid min-h-0 gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
-          <div className="flex min-h-0 items-center justify-center">
+        <div className="grid min-h-0 items-stretch gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
+          <div className="flex min-h-0 items-center justify-start">
             <GameBoard
               board={board}
               activeBoardSize={activeBoardSize}
@@ -53,7 +51,7 @@ function App() {
               onSelectCell={selectCell}
             />
           </div>
-          <div className="grid min-h-0 grid-rows-[auto_minmax(0,1fr)] gap-3 overflow-hidden">
+          <div className="flex min-h-0 items-start justify-stretch overflow-hidden">
             <StatusPanel
               currentPlayer={currentPlayer}
               actionPoints={actionPoints}
@@ -64,7 +62,6 @@ function App() {
               onOpenHints={() => setIsHintsOpen(true)}
               onRestart={resetGame}
             />
-            <EventLog events={events} />
           </div>
         </div>
       </div>

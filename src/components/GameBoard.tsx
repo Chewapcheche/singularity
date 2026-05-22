@@ -22,8 +22,8 @@ export function GameBoard({
 
   return (
     <section
-      className="relative mx-auto flex aspect-square w-full max-w-full rounded-[1.6rem] border border-cyan-300/20 bg-slate-950/55 p-2 shadow-[0_0_70px_rgba(8,145,178,0.18)] backdrop-blur-xl sm:p-3"
-      style={{ maxWidth: 'min(100%, calc(100dvh - 8.75rem))' }}
+      className="relative flex aspect-square w-full max-w-full rounded-[1.6rem] border border-cyan-300/20 bg-slate-950/55 p-2 shadow-[0_0_70px_rgba(8,145,178,0.18)] backdrop-blur-xl sm:p-3"
+      style={{ width: 'min(100%, calc(100dvh - 8.75rem))' }}
     >
       <div className="absolute -inset-px -z-10 rounded-[1.6rem] bg-gradient-to-br from-cyan-500/30 via-fuchsia-500/10 to-indigo-500/25 blur-xl" />
       <div
