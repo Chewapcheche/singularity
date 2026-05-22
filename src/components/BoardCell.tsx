@@ -36,7 +36,7 @@ export function BoardCell({ cell, isSelected, currentPlayer, onSelect }: BoardCe
       onClick={() => onSelect(cell.id)}
       onDragStart={(event) => event.preventDefault()}
       className={[
-        'group relative aspect-square min-h-0 overflow-hidden rounded-xl border bg-slate-950/80 transition duration-200 ease-out [container-type:inline-size] sm:rounded-2xl',
+        'group relative min-h-0 overflow-hidden rounded-xl border bg-slate-950/80 transition duration-200 ease-out [container-type:inline-size] sm:rounded-2xl',
         'hover:-translate-y-0.5 hover:border-cyan-300/80 hover:shadow-neon focus:outline-none focus:ring-2 focus:ring-cyan-300/80',
         cell.anomaly
           ? `bg-gradient-to-br ${anomalyClasses[cell.anomaly.type]}`

@@ -28,7 +28,7 @@ function App() {
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,0.2),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(217,70,239,0.16),transparent_30%),linear-gradient(135deg,rgba(15,23,42,0.9),rgba(2,6,23,1))]" />
       <div className="pointer-events-none fixed inset-0 opacity-[0.14] [background-image:linear-gradient(rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:42px_42px]" />
 
-      <div className="relative z-10 mx-auto grid h-full max-w-[1500px] grid-rows-[auto_minmax(0,1fr)] gap-3 px-3 py-3 sm:px-4">
+      <div className="relative z-10 grid h-full w-full grid-rows-[auto_minmax(0,1fr)] gap-3 p-3 sm:gap-4 sm:p-4">
         <header className="flex shrink-0 flex-col justify-between gap-2 rounded-[1.5rem] border border-white/10 bg-white/[0.035] px-4 py-3 backdrop-blur-xl md:flex-row md:items-end">
           <div>
             <p className="text-[0.65rem] uppercase tracking-[0.42em] text-cyan-200/75">Local tactical prototype</p>
@@ -41,8 +41,8 @@ function App() {
           </div>
         </header>
 
-        <div className="grid min-h-0 items-stretch gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
-          <div className="flex min-h-0 items-center justify-start">
+        <div className="grid min-h-0 items-stretch gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
+          <div className="flex min-h-0 items-stretch justify-stretch">
             <GameBoard
               board={board}
               activeBoardSize={activeBoardSize}
