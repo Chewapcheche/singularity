@@ -36,7 +36,7 @@ export function BoardCell({ cell, isSelected, currentPlayer, onSelect }: BoardCe
       onClick={() => onSelect(cell.id)}
       onDragStart={(event) => event.preventDefault()}
       className={[
-        'group relative min-h-0 overflow-hidden rounded-xl border bg-slate-950/80 transition duration-200 ease-out [container-type:inline-size] sm:rounded-2xl',
+        'group relative h-full w-full min-h-0 overflow-hidden rounded-xl border bg-slate-950/80 transition duration-200 ease-out [container-type:inline-size] sm:rounded-2xl',
         'hover:-translate-y-0.5 hover:border-cyan-300/80 hover:shadow-neon focus:outline-none focus:ring-2 focus:ring-cyan-300/80',
         cell.anomaly
           ? `bg-gradient-to-br ${anomalyClasses[cell.anomaly.type]}`
@@ -59,7 +59,7 @@ export function BoardCell({ cell, isSelected, currentPlayer, onSelect }: BoardCe
       {cell.piece && (
         <span
           className={[
-            'pointer-events-none absolute inset-0 z-10 flex select-none items-center justify-center font-display text-[92cqw] font-black leading-none tracking-[-0.08em] scale-x-[1.18] scale-y-[1.22]',
+            'pointer-events-none absolute inset-0 z-10 flex select-none items-center justify-center font-display text-[78cqw] font-black leading-none tracking-[-0.06em]',
             cell.piece === 'X'
               ? 'text-cyan-100 drop-shadow-[0_0_22px_rgba(34,211,238,1)]'
               : 'text-fuchsia-100 drop-shadow-[0_0_22px_rgba(217,70,239,1)]',

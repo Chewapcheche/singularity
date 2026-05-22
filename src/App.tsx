@@ -42,7 +42,7 @@ function App() {
         </header>
 
         <div className="grid min-h-0 items-stretch gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(300px,360px)]">
-          <div className="flex min-h-0 items-stretch justify-stretch">
+          <div className="flex min-h-0 items-start justify-start">
             <GameBoard
               board={board}
               activeBoardSize={activeBoardSize}

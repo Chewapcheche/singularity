@@ -22,7 +22,7 @@ export function GameBoard({
 
   return (
     <section
-      className="relative flex min-h-0 w-full rounded-[1.6rem] border border-cyan-300/20 bg-slate-950/55 p-2 shadow-[0_0_70px_rgba(8,145,178,0.18)] backdrop-blur-xl sm:p-3"
+      className="relative flex aspect-square h-full max-h-full max-w-full rounded-[1.6rem] border border-cyan-300/20 bg-slate-950/55 p-2 shadow-[0_0_70px_rgba(8,145,178,0.18)] backdrop-blur-xl sm:p-3"
     >
       <div className="absolute -inset-px -z-10 rounded-[1.6rem] bg-gradient-to-br from-cyan-500/30 via-fuchsia-500/10 to-indigo-500/25 blur-xl" />
       <div
