@@ -373,10 +373,10 @@ export const placePiece = (state: GameState, cellId: string): GameState => {
   const cell = getCell(state.board, cellId);
   if (!cell || cell.piece || !isInsideActiveBoard(cell, state.activeBoardSize)) return state;
 
-  const isTurnTwoPlayer = state.currentPlayer === 'O';
+  const isPlayerZeroSecondMove = state.currentPlayer === 'O' && state.turn === 2 && state.actionPoints === 1;
   const isAdjacentToOwnPiece = hasAdjacentOwnPiece(state.board, cell, state.currentPlayer, state.activeBoardSize);
 
-  if (isTurnTwoPlayer && state.turn !== 2 && isAdjacentToOwnPiece) {
+  if (isPlayerZeroSecondMove && isAdjacentToOwnPiece) {
     return {
       ...state,
       selectedCellId: null,
@@ -384,7 +384,7 @@ export const placePiece = (state: GameState, cellId: string): GameState => {
         state.events,
         createGameEvent(
           state.turn,
-          'Player 0 can only place next to another 0 during turn 2.',
+          'Player 0 cannot place next to another 0 on move number 2.',
           'system',
         ),
       ),

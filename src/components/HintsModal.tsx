@@ -36,7 +36,7 @@ export function HintsModal({ isOpen, onClose }: HintsModalProps) {
               <ul className="space-y-2 text-sm leading-5 text-slate-300">
                 <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-cyan-200" /> X starts with 1 action. Every later turn gives 2 actions.</li>
                 <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-fuchsia-200" /> Pieces cannot be moved or dragged after placement.</li>
-                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-emerald-200" /> Adjacent placement is allowed; Player 0 can only place next to another 0 during turn 2.</li>
+                <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-emerald-200" /> Adjacent placement is allowed except Player 0 cannot place next to another 0 on their second move.</li>
                 <li className="flex gap-2"><Shield size={16} className="mt-0.5 shrink-0 text-amber-200" /> The board starts 4x4, expands after moves 4 and 7, and draws after move {DRAW_MOVE_LIMIT}.</li>
               </ul>
             </section>
