@@ -1,12 +1,15 @@
-import { Activity, BadgeInfo, Crosshair, RefreshCw, Shield } from 'lucide-react';
-import type { Player, VictoryCondition } from '../types';
+import { Activity, Crosshair, HelpCircle, RefreshCw } from 'lucide-react';
+import { DRAW_MOVE_LIMIT, type Player, type VictoryCondition } from '../types';
 
 interface StatusPanelProps {
   currentPlayer: Player;
   actionPoints: number;
   maxActionPoints: number;
   turn: number;
+  moveCount: number;
+  activeBoardSize: number;
   victoryCondition: VictoryCondition;
+  onOpenHints: () => void;
   onRestart: () => void;
 }
 
@@ -15,43 +18,44 @@ export function StatusPanel({
   actionPoints,
   maxActionPoints,
   turn,
+  moveCount,
+  activeBoardSize,
   victoryCondition,
+  onOpenHints,
   onRestart,
 }: StatusPanelProps) {
   return (
-    <aside className="space-y-4">
-      <div className="rounded-3xl border border-cyan-300/20 bg-slate-950/65 p-5 shadow-neon backdrop-blur-xl">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xs uppercase tracking-[0.34em] text-cyan-200/70">Active Operative</p>
-            <div className="mt-2 flex items-center gap-3">
-              <span
-                className={[
-                  'grid h-14 w-14 place-items-center rounded-2xl border font-display text-3xl font-black',
-                  currentPlayer === 'X'
-                    ? 'border-cyan-200/60 bg-cyan-400/10 text-cyan-100 shadow-[0_0_28px_rgba(34,211,238,0.35)]'
-                    : 'border-fuchsia-200/60 bg-fuchsia-400/10 text-fuchsia-100 shadow-[0_0_28px_rgba(217,70,239,0.35)]',
-                ].join(' ')}
-              >
-                {currentPlayer}
-              </span>
-              <div>
-                <p className="font-display text-2xl font-bold text-white">Player {currentPlayer}</p>
-                <p className="text-sm text-slate-400">Turn cycle {turn}</p>
-              </div>
+    <aside className="grid gap-3">
+      <div className="rounded-3xl border border-cyan-300/20 bg-slate-950/70 p-4 shadow-neon backdrop-blur-xl">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span
+              className={[
+                'grid h-14 w-14 place-items-center rounded-2xl border font-display text-4xl font-black leading-none',
+                currentPlayer === 'X'
+                  ? 'border-cyan-200/60 bg-cyan-400/10 text-cyan-100 shadow-[0_0_28px_rgba(34,211,238,0.35)]'
+                  : 'border-fuchsia-200/60 bg-fuchsia-400/10 text-fuchsia-100 shadow-[0_0_28px_rgba(217,70,239,0.35)]',
+              ].join(' ')}
+            >
+              {currentPlayer === 'O' ? '0' : currentPlayer}
+            </span>
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-[0.28em] text-cyan-200/70">Current Turn</p>
+              <p className="font-display text-2xl font-bold text-white">Player {currentPlayer === 'O' ? '0' : currentPlayer}</p>
+              <p className="text-sm text-slate-400">Turn {turn}</p>
             </div>
           </div>
-          <Activity className="text-cyan-200" />
+          <Activity className="hidden text-cyan-200 sm:block" />
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-          <div className="mb-3 flex items-center justify-between text-sm text-slate-300">
-            <span>Action Points</span>
-            <span>
+        <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+          <div className="mb-2 flex items-center justify-between text-sm text-slate-300">
+            <span>Actions</span>
+            <span className="font-semibold text-cyan-100">
               {actionPoints}/{maxActionPoints}
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${maxActionPoints}, minmax(0, 1fr))` }}>
             {Array.from({ length: maxActionPoints }, (_, index) => (
               <span
                 key={index}
@@ -65,39 +69,47 @@ export function StatusPanel({
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="rounded-3xl border border-fuchsia-300/20 bg-slate-950/65 p-5 shadow-violet backdrop-blur-xl">
-        <div className="flex items-start gap-3">
-          <Crosshair className="mt-1 text-fuchsia-200" />
-          <div>
-            <p className="text-xs uppercase tracking-[0.34em] text-fuchsia-200/70">Victory Protocol</p>
-            <h2 className="mt-2 font-display text-2xl font-bold text-white">{victoryCondition.title}</h2>
-            <p className="mt-1 text-sm font-semibold text-cyan-100">{victoryCondition.short}</p>
-            <p className="mt-3 text-sm leading-6 text-slate-300">{victoryCondition.description}</p>
+        <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-slate-400">Board</p>
+            <p className="font-display text-xl font-bold text-white">{activeBoardSize}x{activeBoardSize}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
+            <p className="text-slate-400">Moves</p>
+            <p className="font-display text-xl font-bold text-white">{moveCount}/{DRAW_MOVE_LIMIT}</p>
           </div>
         </div>
       </div>
 
-      <div className="rounded-3xl border border-white/10 bg-slate-950/65 p-5 backdrop-blur-xl">
-        <div className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.24em] text-slate-300">
-          <BadgeInfo size={16} /> Command Rules
+      <div className="rounded-3xl border border-fuchsia-300/20 bg-slate-950/70 p-4 shadow-violet backdrop-blur-xl">
+        <div className="flex items-start gap-3">
+          <Crosshair className="mt-1 shrink-0 text-fuchsia-200" />
+          <div>
+            <p className="text-[0.65rem] uppercase tracking-[0.28em] text-fuchsia-200/70">Victory Protocol</p>
+            <h2 className="mt-1 font-display text-xl font-bold text-white">{victoryCondition.title}</h2>
+            <p className="text-sm font-semibold text-cyan-100">{victoryCondition.short}</p>
+            <p className="mt-2 text-sm leading-5 text-slate-300">{victoryCondition.description}</p>
+          </div>
         </div>
-        <ul className="space-y-2 text-sm leading-6 text-slate-400">
-          <li className="flex gap-2"><Shield size={16} className="mt-1 text-cyan-200" /> Turn 1 grants X 1 AP; every later turn grants 2 AP.</li>
-          <li className="flex gap-2"><Shield size={16} className="mt-1 text-cyan-200" /> Place a marker: 1 AP.</li>
-          <li className="flex gap-2"><Shield size={16} className="mt-1 text-fuchsia-200" /> Select your marker, then move to a glowing adjacent cell: 1 AP.</li>
-          <li className="flex gap-2"><Shield size={16} className="mt-1 text-emerald-200" /> Click your marker on an anomaly to activate it: 1 AP.</li>
-        </ul>
       </div>
 
-      <button
-        type="button"
-        onClick={onRestart}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl border border-cyan-300/40 bg-cyan-300/10 px-5 py-3 font-display font-bold uppercase tracking-[0.2em] text-cyan-100 transition hover:-translate-y-0.5 hover:bg-cyan-300/20 hover:shadow-neon focus:outline-none focus:ring-2 focus:ring-cyan-200"
-      >
-        <RefreshCw size={18} /> Restart Game
-      </button>
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          onClick={onOpenHints}
+          className="flex items-center justify-center gap-2 rounded-2xl border border-fuchsia-300/40 bg-fuchsia-300/10 px-4 py-3 font-display text-sm font-bold uppercase tracking-[0.14em] text-fuchsia-100 transition hover:-translate-y-0.5 hover:bg-fuchsia-300/20 hover:shadow-violet focus:outline-none focus:ring-2 focus:ring-fuchsia-200"
+        >
+          <HelpCircle size={17} /> Hints
+        </button>
+        <button
+          type="button"
+          onClick={onRestart}
+          className="flex items-center justify-center gap-2 rounded-2xl border border-cyan-300/40 bg-cyan-300/10 px-4 py-3 font-display text-sm font-bold uppercase tracking-[0.14em] text-cyan-100 transition hover:-translate-y-0.5 hover:bg-cyan-300/20 hover:shadow-neon focus:outline-none focus:ring-2 focus:ring-cyan-200"
+        >
+          <RefreshCw size={17} /> Restart
+        </button>
+      </div>
     </aside>
   );
 }

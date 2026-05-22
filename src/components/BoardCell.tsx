@@ -26,15 +26,18 @@ export function BoardCell({ cell, isSelected, isValidMove, currentPlayer, onSele
   const Icon = cell.anomaly ? anomalyIcon[cell.anomaly.type] : Binary;
   const canActivate = cell.piece === currentPlayer && cell.anomaly;
   const tooltip = cell.anomaly ? anomalyDescriptions[cell.anomaly.type] : null;
+  const displayPiece = cell.piece === 'O' ? '0' : cell.piece;
 
   return (
     <button
       type="button"
+      draggable={false}
       aria-label={`Sector ${cell.row + 1}.${cell.col + 1}${cell.piece ? ` occupied by ${cell.piece}` : ''}`}
       title={tooltip ? `${tooltip.label}: ${tooltip.description}` : 'Empty sector'}
       onClick={() => onSelect(cell.id)}
+      onDragStart={(event) => event.preventDefault()}
       className={[
-        'group relative aspect-square overflow-hidden rounded-2xl border bg-slate-950/80 transition duration-200 ease-out',
+        'group relative aspect-square min-h-0 overflow-hidden rounded-xl border bg-slate-950/80 transition duration-200 ease-out sm:rounded-2xl',
         'hover:-translate-y-0.5 hover:border-cyan-300/80 hover:shadow-neon focus:outline-none focus:ring-2 focus:ring-cyan-300/80',
         cell.anomaly
           ? `bg-gradient-to-br ${anomalyClasses[cell.anomaly.type]}`
@@ -44,13 +47,13 @@ export function BoardCell({ cell, isSelected, isValidMove, currentPlayer, onSele
         canActivate ? 'animate-slow-pulse' : '',
       ].join(' ')}
     >
-      <span className="absolute inset-px rounded-2xl bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.16),transparent_38%)] opacity-80" />
-      <span className="absolute left-2 top-2 text-[0.58rem] font-semibold tracking-[0.24em] text-slate-400/70">
+      <span className="absolute inset-px rounded-xl bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.16),transparent_38%)] opacity-80 sm:rounded-2xl" />
+      <span className="absolute left-1.5 top-1.5 text-[0.5rem] font-semibold tracking-[0.2em] text-slate-400/55 sm:left-2 sm:top-2 sm:text-[0.58rem]">
         {cell.row + 1}.{cell.col + 1}
       </span>
 
       {cell.anomaly && (
-        <span className="absolute right-2 top-2 rounded-full border border-white/15 bg-black/35 p-1 text-current backdrop-blur">
+        <span className="absolute right-1.5 top-1.5 rounded-full border border-white/15 bg-black/35 p-1 text-current backdrop-blur sm:right-2 sm:top-2">
           <Icon size={14} />
         </span>
       )}
@@ -64,13 +67,13 @@ export function BoardCell({ cell, isSelected, isValidMove, currentPlayer, onSele
       {cell.piece && (
         <span
           className={[
-            'relative z-10 flex h-full items-center justify-center font-display text-4xl font-black md:text-5xl',
+            'relative z-10 flex h-full items-center justify-center font-display text-[clamp(2.4rem,12vmin,6.2rem)] font-black leading-none',
             cell.piece === 'X'
-              ? 'text-cyan-100 drop-shadow-[0_0_18px_rgba(34,211,238,0.9)]'
-              : 'text-fuchsia-100 drop-shadow-[0_0_18px_rgba(217,70,239,0.9)]',
+              ? 'text-cyan-100 drop-shadow-[0_0_22px_rgba(34,211,238,1)]'
+              : 'text-fuchsia-100 drop-shadow-[0_0_22px_rgba(217,70,239,1)]',
           ].join(' ')}
         >
-          {cell.piece}
+          {displayPiece}
         </span>
       )}
 

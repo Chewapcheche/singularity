@@ -1,13 +1,16 @@
-import { Crown, RefreshCw } from 'lucide-react';
-import type { Winner } from '../types';
+import { Crown, RefreshCw, Scale } from 'lucide-react';
+import type { DrawState, Winner } from '../types';
 
 interface VictoryOverlayProps {
   winner: Winner | null;
+  draw: DrawState | null;
   onRestart: () => void;
 }
 
-export function VictoryOverlay({ winner, onRestart }: VictoryOverlayProps) {
-  if (!winner) return null;
+export function VictoryOverlay({ winner, draw, onRestart }: VictoryOverlayProps) {
+  if (!winner && !draw) return null;
+
+  const isDraw = Boolean(draw);
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/80 p-6 backdrop-blur-md">
@@ -15,12 +18,16 @@ export function VictoryOverlay({ winner, onRestart }: VictoryOverlayProps) {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.2),transparent_38%),radial-gradient(circle_at_bottom,rgba(217,70,239,0.16),transparent_42%)]" />
         <div className="relative z-10">
           <div className="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-full border border-fuchsia-200/50 bg-fuchsia-300/10 text-fuchsia-100 shadow-violet">
-            <Crown size={38} />
+            {isDraw ? <Scale size={38} /> : <Crown size={38} />}
           </div>
-          <p className="text-xs uppercase tracking-[0.45em] text-cyan-100/80">Fracture Stabilized</p>
-          <h2 className="mt-4 font-display text-5xl font-black text-white">Player {winner.player} Wins</h2>
-          <p className="mt-4 text-lg text-slate-300">{winner.message}</p>
-          <p className="mt-2 text-sm text-cyan-100">Protocol: {winner.condition.title}</p>
+          <p className="text-xs uppercase tracking-[0.45em] text-cyan-100/80">
+            {isDraw ? 'Fracture Unresolved' : 'Fracture Stabilized'}
+          </p>
+          <h2 className="mt-4 font-display text-5xl font-black text-white">
+            {isDraw ? 'Draw' : `Player ${winner?.player === 'O' ? '0' : winner?.player} Wins`}
+          </h2>
+          <p className="mt-4 text-lg text-slate-300">{draw?.message ?? winner?.message}</p>
+          {!isDraw && winner && <p className="mt-2 text-sm text-cyan-100">Protocol: {winner.condition.title}</p>}
           <button
             type="button"
             onClick={onRestart}

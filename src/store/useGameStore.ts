@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { activateAnomaly, createInitialGameState, getValidMoves, movePiece, placePiece } from '../engine/gameEngine';
+import { activateAnomaly, createInitialGameState, placePiece } from '../engine/gameEngine';
 import type { GameState } from '../types';
 
 interface GameStore extends GameState {
@@ -10,44 +10,30 @@ interface GameStore extends GameState {
 
 const withValidMoves = (state: GameState): GameState & { validMoveIds: string[] } => ({
   ...state,
-  validMoveIds: getValidMoves(state.board, state.selectedCellId),
+  validMoveIds: [],
 });
 
 export const useGameStore = create<GameStore>((set, get) => ({
   ...withValidMoves(createInitialGameState()),
   selectCell: (cellId) => {
     const state = get();
-    if (state.winner) return;
+    if (state.winner || state.draw) return;
 
     const cell = state.board.flat().find((candidate) => candidate.id === cellId);
     if (!cell) return;
 
-    const selected = state.selectedCellId
-      ? state.board.flat().find((candidate) => candidate.id === state.selectedCellId)
-      : null;
-
-    let nextState: GameState;
-
-    if (selected && state.validMoveIds.includes(cellId)) {
-      nextState = movePiece(state, selected.id, cellId);
-      set(withValidMoves(nextState));
-      return;
-    }
+    let nextState: GameState | null = null;
 
     if (cell.piece === state.currentPlayer && cell.anomaly) {
       nextState = activateAnomaly(state, cellId);
-      set(withValidMoves(nextState));
-      return;
-    }
-
-    if (cell.piece === state.currentPlayer) {
-      set(withValidMoves({ ...state, selectedCellId: state.selectedCellId === cellId ? null : cellId }));
-      return;
-    }
-
-    if (!cell.piece) {
+    } else if (!cell.piece) {
       nextState = placePiece(state, cellId);
+    }
+
+    if (nextState) {
       set(withValidMoves(nextState));
+    } else {
+      set(withValidMoves({ ...state, selectedCellId: null }));
     }
   },
   resetGame: () => set(withValidMoves(createInitialGameState())),
